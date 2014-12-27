@@ -3,7 +3,7 @@ package no.lislebo.dev;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class MainActivity extends Activity
+public class Lisleflash extends Activity
 {
     /** Called when the activity is first created. */
     @Override
