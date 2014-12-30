@@ -68,6 +68,20 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
         parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
     }
 
+    private void startPreview() {
+        if (!previewOn && camera != null) {
+            camera.startPreview();
+            previewOn = true;
+        }
+    }
+
+    private void stopPreview() {
+        if (previewOn && camera != null) {
+            camera.stopPreview();
+            previewOn = false;
+        }
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
@@ -91,6 +105,7 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
     @Override
     public void onStart() {
         super.onStart();
+        startPreview();
         getCamera();
     }
 
@@ -111,6 +126,7 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
         super.onStop();
         if(camera != null) {
             camera.release();
+            stopPreview();
             camera = null;
         }
     }
@@ -120,6 +136,7 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
         super.onDestroy();
         if(camera != null) {
             flashOff();
+            stopPreview();
             camera.release();
         }
     }
