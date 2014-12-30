@@ -66,7 +66,7 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
 
     public void flashOn() {
         if(camera == null) {
-            Toast.makeText(this, "Camera not found, wtf", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Camera not found", Toast.LENGTH_SHORT).show();
             return;
         }
         flashOn = true;
@@ -94,11 +94,27 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
         if(!flashOn){
             return;
         }
+        flashOn = false;
         if(camera == null) {
             return;
         }
-        flashOn = false;
         Parameters parameters = camera.getParameters();
+        if(parameters == null){
+            Toast.makeText(this, "Can't access camera parameters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        List<String> supportedModes = parameters.getSupportedFlashModes();
+        if(supportedModes == null) {
+            Toast.makeText(this, "Can't access flash modes", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String mode = parameters.getFlashMode();
+        if( !mode.equals( Parameters.FLASH_MODE_TORCH ) ){
+            if( supportedModes.contains( Parameters.FLASH_MODE_OFF ) ){
+                parameters.setFlashMode( Parameters.FLASH_MODE_OFF );
+                camera.setParameters( parameters );
+            }
+        }
         parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
         camera.setParameters(parameters);
     }
