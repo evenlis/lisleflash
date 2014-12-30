@@ -1,11 +1,14 @@
 package no.lislebo.dev;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera;
 import android.content.Context;
@@ -27,6 +30,15 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        surfaceView = (SurfaceView) this.findViewById(R.id.surfaceView);
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        disablePhoneSleep();
+    }
+
+    private void disablePhoneSleep() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private void getCamera() {
@@ -44,13 +56,15 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
     }
 
     public void toggle(View view) {
-        if(flashOn)
+        if(flashOn){
             flashOff();
-        else
+        } else {
             flashOn();
+        }
     }
 
     public void flashOn() {
+        Toast.makeText(this, "Flash on", Toast.LENGTH_SHORT).show();
         if(camera == null) {
             return;
         }
@@ -60,6 +74,7 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
     }
 
     public void flashOff() {
+        Toast.makeText(this, "Flash off", Toast.LENGTH_SHORT).show();
         if(camera == null) {
             return;
         }
@@ -84,7 +99,11 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
+        try {
+            camera.setPreviewDisplay(holder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -112,7 +131,6 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
     @Override
     public void onResume() {
         super.onResume();
-        flashOn();
     }
 
     @Override
