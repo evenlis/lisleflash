@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class Lisleflash extends Activity implements SurfaceHolder.Callback
 {
-    private boolean lightOn;
+    private boolean flashOn;
     private boolean previewOn;
     private View button;
     private SurfaceView surfaceView;
@@ -27,6 +27,45 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+    }
+
+    private void getCamera() {
+        if(camera == null) {
+            try {
+                camera = Camera.open();
+            } catch(RuntimeException e) {
+                Context context = getApplicationContext();
+                CharSequence text = e.toString();
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        }
+    }
+
+    public void toggle(View view) {
+        if(flashOn)
+            flashOff();
+        else
+            flashOn();
+    }
+
+    public void flashOn() {
+        if(camera == null) {
+            return;
+        }
+        flashOn = true;
+        Parameters parameters = camera.getParameters();
+        parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
+    }
+
+    public void flashOff() {
+        if(camera == null) {
+            return;
+        }
+        flashOn = false;
+        Parameters parameters = camera.getParameters();
+        parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
     }
 
     @Override
@@ -44,23 +83,44 @@ public class Lisleflash extends Activity implements SurfaceHolder.Callback
 
     }
 
-    public void toggle(View view) {
+    @Override
+    public void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getCamera();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         flashOn();
     }
 
-    public void flashOn() {
-        Parameters params;
-        try {
-            camera = Camera.open();
-            params = camera.getParameters();
-            params.setFlashMode(Parameters.FLASH_MODE_TORCH);
-        } catch(Exception e) {
-            Context context = getApplicationContext();
-            CharSequence text = e.toString();
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-            Log.d("Lisleflash",e.toString());
+    @Override
+    public void onPause() {
+        super.onPause();
+        flashOff();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(camera != null) {
+            camera.release();
+            camera = null;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(camera != null) {
+            flashOff();
+            camera.release();
         }
     }
 }
