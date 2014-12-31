@@ -3,9 +3,9 @@
     android:minHeight="40dp"
     android:updatePeriodMillis="86400000"
     android:previewImage="@drawable/preview"
-    android:initialLayout="@layout/example_appwidget"
+    android:initialLayout="@layout/lisleflash_widget"
     android:configure="no.lislebo.dev.LisleflashWidgetConfigure"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="keyguard|home_screen"
-    android:initialKeyguardLayout="@layout/example_keyguard">
+    android:initialKeyguardLayout="@layout/lisleflash_keyguard">
 </appwidget-provider>
