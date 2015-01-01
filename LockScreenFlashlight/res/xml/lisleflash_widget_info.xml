@@ -2,7 +2,7 @@
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:updatePeriodMillis="86400000"
-    android:previewImage="@drawable/preview"
+    android:previewImage="@drawable-hdpi/preview"
     android:initialLayout="@layout/lisleflash_widget"
     android:configure="no.lislebo.dev.LisleflashWidgetConfigure"
     android:resizeMode="horizontal|vertical"
